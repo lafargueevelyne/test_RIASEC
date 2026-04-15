@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test RIASEC - Évelyne</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --turquoise: #1A9B8E;
+    --turquoise-light: #E8F7F5;
+    --turquoise-mid: #A8DDD8;
+    --navy: #1A2B5A;
+    --navy-light: #EAF0FF;
+    --orange: #E87722;
+    --orange-light: #FEF0E4;
+    --white: #FFFFFF;
+    --bg: #F7F9FC;
+    --gray: #8E96AA;
+    --gray-light: #EFF1F5;
+    --text: #1C2340;
+    --text-soft: #5A6278;
+    --shadow: 0 4px 24px rgba(26,43,90,0.10);
+    --shadow-sm: 0 2px 8px rgba(26,43,90,0.07);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+  /* LAYOUT */
+  .page { display: none; }
+  .page.active { display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ===== ACCUEIL ===== */
+  #welcome {
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    background: linear-gradient(145deg, var(--navy) 0%, #263d80 100%);
+  }
+  .welcome-inner {
+    max-width: 560px;
+    width: 100%;
+    text-align: center;
+  }
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 30px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .welcome-title {
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    color: #FFFFFF;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  .welcome-title span { color: #6BE8DE; }
+  .welcome-sub {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+  .riasec-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 2.5rem;
+  }
+  .pill {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  .pill-R { background: rgba(232,119,34,0.2); border-color: rgba(232,119,34,0.5); color: #FFAB60; }
+  .pill-I { background: rgba(26,155,142,0.2); border-color: rgba(26,155,142,0.5); color: #6BE8DE; }
+  .pill-A { background: rgba(180,120,220,0.2); border-color: rgba(180,120,220,0.5); color: #D4A0FF; }
+  .pill-S { background: rgba(72,190,120,0.2); border-color: rgba(72,190,120,0.5); color: #80EDB2; }
+  .pill-E { background: rgba(240,80,80,0.2); border-color: rgba(240,80,80,0.5); color: #FF9B9B; }
+  .pill-C { background: rgba(80,140,240,0.2); border-color: rgba(80,140,240,0.5); color: #A0C8FF; }
+  .info-chips {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .info-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+  }
+  .info-chip svg { width: 14px; height: 14px; }
+  .btn-start {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--turquoise);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 36px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(26,155,142,0.4);
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(26,155,142,0.5); }
+
+  /* ===== QUIZ ===== */
+  #quiz { background: var(--bg); }
+  .quiz-header {
+    background: var(--white);
+    border-bottom: 1px solid rgba(26,43,90,0.07);
+    padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .quiz-header-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .q-counter {
+    font-size: 13px;
+    color: var(--text-soft);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--gray-light);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--turquoise), #4ECDC4);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .quiz-body {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+  .q-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-bottom: 1rem;
+  }
+  .question-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+  }
+  .question-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+  .q-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--turquoise-mid);
+    line-height: 1;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .options-grid {
+    display: grid;
+    gap: 10px;
+  }
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--gray-light);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.18s;
+    font-size: 0.95rem;
+    color: var(--text-soft);
+  }
+  .option-label:hover { border-color: var(--turquoise); background: var(--turquoise-light); }
+  .option-label input { display: none; }
+  .option-label.selected {
+    border-color: var(--turquoise);
+    background: var(--turquoise-light);
+    color: var(--navy);
+    font-weight: 500;
+  }
+  .option-label.selected .radio-dot { background: var(--turquoise); border-color: var(--turquoise); }
+  .radio-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--gray);
+    flex-shrink: 0;
+    transition: all 0.18s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .radio-dot::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .option-label.selected .radio-dot::after { opacity: 1; }
+
+  .quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .btn-prev, .btn-next {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 24px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    border: none;
+  }
+  .btn-prev {
+    background: transparent;
+    color: var(--text-soft);
+    border: 1.5px solid var(--gray-light);
+  }
+  .btn-prev:hover { border-color: var(--gray); color: var(--text); }
+  .btn-next {
+    background: var(--navy);
+    color: white;
+    box-shadow: 0 3px 12px rgba(26,43,90,0.25);
+  }
+  .btn-next:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(26,43,90,0.3); }
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .unanswered-msg {
+    font-size: 13px;
+    color: var(--orange);
+    text-align: center;
+    display: none;
+  }
+
+  /* ===== RÉSULTATS ===== */
+  #results { background: var(--bg); }
+  .results-header {
+    background: linear-gradient(135deg, var(--navy) 0%, #1f3d8a 100%);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+  }
+  .results-header h2 {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+  .results-header p { color: rgba(255,255,255,0.7); font-size: 0.95rem; }
+  .results-body {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+  .scores-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+  @media(max-width: 600px) { .scores-grid { grid-template-columns: repeat(3, 1fr); } }
+  .score-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 1rem 0.75rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-card.top-score { border-color: var(--turquoise); }
+  .score-card.top-score::before {
+    content: '★';
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 10px;
+    color: var(--turquoise);
+  }
+  .score-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    display: block;
+  }
+  .score-name { font-size: 10px; color: var(--gray); display: block; margin: 2px 0 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .score-bar-wrap { height: 6px; background: var(--gray-light); border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+  .score-bar { height: 100%; border-radius: 3px; transition: width 1s ease; }
+  .score-pct { font-size: 12px; font-weight: 600; }
+
+  .top3-section {
+    background: white;
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .top3-label { font-size: 13px; color: var(--text-soft); font-weight: 500; white-space: nowrap; }
+  .riasec-code {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: 0.08em;
+    flex: 1;
+  }
+  .riasec-code span { color: var(--turquoise); }
+
+  /* ===== RAPPORT IA ===== */
+  .report-section {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .report-loading {
+    padding: 3rem;
+    text-align: center;
+  }
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--turquoise-light);
+    border-top-color: var(--turquoise);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 0.95rem; color: var(--text-soft); }
+
+  .report-content { padding: 0; }
+  .report-header-bar {
+    background: linear-gradient(135deg, var(--turquoise), #0d7e73);
+    padding: 1.5rem;
+    color: white;
+  }
+  .report-header-bar h3 { font-size: 1.3rem; color: white; margin-bottom: 0.25rem; }
+  .report-header-bar p { font-size: 0.85rem; opacity: 0.8; }
+
+  .metier-card {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--gray-light);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: start;
+    transition: background 0.15s;
+  }
+  .metier-card:hover { background: var(--bg); }
+  .metier-card:last-child { border-bottom: none; }
+  .metier-num {
+    width: 32px;
+    height: 32px;
+    background: var(--navy-light);
+    color: var(--navy);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .metier-body h4 { font-size: 1rem; font-weight: 600; color: var(--navy); margin-bottom: 4px; font-family: 'DM Sans', sans-serif; }
+  .metier-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .metier-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 500;
+    background: var(--turquoise-light);
+    color: var(--turquoise);
+  }
+  .metier-tag.emp { background: var(--orange-light); color: var(--orange); }
+  .metier-tag.niveau { background: var(--navy-light); color: var(--navy); }
+  .metier-desc { font-size: 0.875rem; color: var(--text-soft); line-height: 1.6; }
+  .emp-bar-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .emp-label { font-size: 11px; color: var(--text-soft); white-space: nowrap; }
+  .emp-bar-wrap { flex: 1; height: 5px; background: var(--gray-light); border-radius: 3px; overflow: hidden; }
+  .emp-bar { height: 100%; border-radius: 3px; }
+  .emp-bar.high { background: #2ECC8E; width: 85%; }
+  .emp-bar.medium { background: #F7B731; width: 55%; }
+  .emp-bar.low { background: #FC5C65; width: 30%; }
+
+  .btn-retry {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    color: var(--navy);
+    border: 1.5px solid var(--gray-light);
+    border-radius: 50px;
+    padding: 10px 22px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 1.5rem;
+    transition: all 0.2s;
+  }
+  .btn-retry:hover { border-color: var(--navy); color: var(--navy); }
+
+  .intro-text {
+    padding: 1.25rem 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-soft);
+    line-height: 1.7;
+    border-bottom: 1px solid var(--gray-light);
+    background: #FAFBFF;
+  }
+
+  .error-box {
+    padding: 2rem;
+    text-align: center;
+    color: var(--orange);
+  }
+
+  /* ===== SECTION PORTRAIT ===== */
+  .portrait-section { margin-bottom: 2rem; }
+  .portrait-intro-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 1.4rem 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--turquoise);
+  }
+  .portrait-intro-card p { font-size: 0.95rem; line-height: 1.8; color: var(--text); }
+  .portrait-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  @media(max-width:640px) { .portrait-grid { grid-template-columns: 1fr; } }
+  .portrait-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .portrait-card-head {
+    padding: 12px 14px 8px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border-bottom: 1px solid var(--gray-light);
+  }
+  .portrait-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .portrait-card-head h4 {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+  }
+  .portrait-card-body { padding: 12px 14px 14px; }
+  .portrait-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 7px;
+    font-size: 0.875rem;
+    color: var(--text-soft);
+    line-height: 1.5;
+  }
+  .portrait-item:last-child { margin-bottom: 0; }
+  .portrait-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+  .portrait-bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width:640px) { .portrait-bottom-row { grid-template-columns: 1fr; } }
+  .portrait-avoid-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 1rem 1.25rem;
+    border-left: 4px solid var(--orange);
+  }
+  .portrait-avoid-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+  .portrait-avoid-card p { font-size: 0.875rem; color: var(--text-soft); line-height: 1.65; }
+  .portrait-strengths-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 1rem 1.25rem;
+    border-left: 4px solid var(--navy);
+  }
+  .portrait-strengths-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+  .strengths-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .strength-chip {
+    padding: 4px 11px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: var(--navy-light);
+    color: var(--navy);
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 : ACCUEIL -->
+<div class="page active" id="welcome">
+  <div class="welcome-inner">
+    <div class="logo-badge">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/><path d="M6 3v3l2 1.5" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Bilan de compétences · Outil de découverte
+    </div>
+    <h1 class="welcome-title">Découvrez votre profil<br><span>RIASEC</span></h1>
+    <p class="welcome-sub">
+      30 questions pour explorer vos intérêts professionnels selon la théorie de Holland, et obtenir un rapport personnalisé avec des pistes métiers concrètes.
+    </p>
+    <div class="riasec-pills">
+      <span class="pill pill-R">R · Réaliste</span>
+      <span class="pill pill-I">I · Investigateur</span>
+      <span class="pill pill-A">A · Artistique</span>
+      <span class="pill pill-S">S · Social</span>
+      <span class="pill pill-E">E · Entreprenant</span>
+      <span class="pill pill-C">C · Conventionnel</span>
+    </div>
+    <div class="info-chips">
+      <span class="info-chip">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2" stroke-linecap="round"/></svg>
+        ~8 minutes
+      </span>
+      <span class="info-chip">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="2"/><path d="M5 8h6M5 11h4" stroke-linecap="round"/></svg>
+        30 affirmations
+      </span>
+      <span class="info-chip">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 4L6.5 10.5 3 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Rapport IA personnalisé
+      </span>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">
+      Commencer le test
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- PAGE 2 : QUIZ -->
+<div class="page" id="quiz">
+  <div class="quiz-header">
+    <div class="quiz-header-inner">
+      <span class="q-counter"><span id="q-current">1</span> / 30</span>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:3%"></div></div>
+    </div>
+  </div>
+  <div class="quiz-body">
+    <div class="question-card" id="question-card">
+      <span class="q-num" id="q-num-display">01</span>
+      <p class="question-text" id="question-text">...</p>
+      <div class="options-grid" id="options-grid"></div>
+    </div>
+    <div class="unanswered-msg" id="unanswered-msg">Veuillez sélectionner une réponse pour continuer.</div>
+    <div class="quiz-nav">
+      <button class="btn-prev" id="btn-prev" onclick="prevQuestion()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Précédent
+      </button>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">
+        Suivant
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3 : RÉSULTATS -->
+<div class="page" id="results">
+  <div class="results-header">
+    <h2>Votre profil RIASEC</h2>
+    <p>Voici vos résultats et votre rapport personnalisé</p>
+  </div>
+  <div class="results-body">
+    <div class="scores-grid" id="scores-grid"></div>
+
+    <div class="top3-section">
+      <div>
+        <div class="top3-label">Votre code RIASEC dominant</div>
+        <div class="riasec-code" id="riasec-code">---</div>
+      </div>
+      <div style="font-size:0.85rem;color:var(--text-soft);line-height:1.6;flex:2;min-width:200px;" id="code-desc"></div>
+    </div>
+
+    <div id="profile-section"></div>
+
+    <div class="report-section" id="report-section">
+      <div class="report-loading" id="report-loading">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Génération de votre rapport personnalisé en cours…</p>
+      </div>
+      <div class="report-content" id="report-content" style="display:none;"></div>
+    </div>
+
+    <div style="text-align:center;">
+      <button class="btn-retry" onclick="resetTest()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8a6 6 0 1 1 1.5 4" stroke-linecap="round"/><path d="M2 12V8h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Recommencer le test
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  { type:'R', text:"J'aime travailler avec des outils, des machines ou des équipements techniques." },
+  { type:'I', text:"J'aime analyser des données ou résoudre des problèmes complexes par la réflexion." },
+  { type:'A', text:"J'aime m'exprimer de manière créative (dessin, écriture, musique, design…)." },
+  { type:'S', text:"J'aime aider les autres à traverser des moments difficiles ou à évoluer." },
+  { type:'E', text:"J'aime convaincre, influencer ou rallier les autres à mes idées." },
+  { type:'C', text:"J'aime classer, organiser et structurer des informations ou des données." },
+  { type:'R', text:"Les activités en plein air, en contact avec la nature ou le terrain m'attirent." },
+  { type:'I', text:"Les sujets scientifiques ou techniques m'intéressent profondément." },
+  { type:'A', text:"Je préfère un environnement de travail flexible, peu rigide et stimulant." },
+  { type:'S', text:"Enseigner, former ou accompagner des personnes me semble valorisant." },
+  { type:'E', text:"Prendre des initiatives et diriger un projet ou une équipe me plaît." },
+  { type:'C', text:"Je me sens à l'aise avec le travail administratif, les procédures et les règles." },
+  { type:'R', text:"Je préfère résoudre des problèmes concrets et pratiques plutôt qu'abstraits." },
+  { type:'I', text:"J'aime observer, comprendre et chercher à expliquer comment les choses fonctionnent." },
+  { type:'A', text:"L'esthétique, le style et la beauté des créations occupent une place importante pour moi." },
+  { type:'S', text:"Je suis naturellement à l'écoute et les gens me confient facilement leurs difficultés." },
+  { type:'E', text:"Les défis liés à la vente, la négociation ou le développement commercial m'intéressent." },
+  { type:'C', text:"La précision, l'exactitude et l'attention aux détails sont des qualités que je revendique." },
+  { type:'R', text:"J'aime construire, réparer, fabriquer ou assembler des objets de mes mains." },
+  { type:'I', text:"La recherche documentaire, l'investigation ou l'exploration intellectuelle me passionnent." },
+  { type:'A', text:"J'aime imaginer des concepts originaux et sortir des sentiers battus." },
+  { type:'S', text:"Travailler en équipe et contribuer au bien-être collectif me motive." },
+  { type:'E', text:"La réussite professionnelle et la reconnaissance de mes résultats sont importantes pour moi." },
+  { type:'C', text:"Je préfère des tâches bien définies avec un cadre clair plutôt que des missions floues." },
+  { type:'R', text:"Je me sens à l'aise dans des environnements de travail physiques ou manuels." },
+  { type:'I', text:"J'aime remettre en question les idées reçues et mener mes propres investigations." },
+  { type:'A', text:"Les arts visuels, la photographie, le cinéma ou la mode m'attirent particulièrement." },
+  { type:'S', text:"Je trouve de la satisfaction à voir les personnes que j'accompagne progresser." },
+  { type:'E', text:"Je me vois bien dans un rôle de manager, de directeur ou d'entrepreneur." },
+  { type:'C', text:"J'aime travailler avec des chiffres, des budgets ou des tableaux de bord." }
+];
+
+const OPTIONS = [
+  { label: "Pas du tout d'accord", value: 0 },
+  { label: "Plutôt pas d'accord", value: 1 },
+  { label: "Plutôt d'accord",      value: 2 },
+  { label: "Tout à fait d'accord", value: 3 }
+];
+
+const TYPE_INFO = {
+  R: { name: "Réaliste",      color: "#E87722", light: "#FEF0E4" },
+  I: { name: "Investigateur", color: "#1A9B8E", light: "#E8F7F5" },
+  A: { name: "Artistique",    color: "#9B59B6", light: "#F3E8FD" },
+  S: { name: "Social",        color: "#27AE60", light: "#E8F8EE" },
+  E: { name: "Entreprenant",  color: "#E74C3C", light: "#FDECEB" },
+  C: { name: "Conventionnel", color: "#2980B9", light: "#EAF3FC" }
+};
+
+let currentQ = 0;
+let answers = new Array(30).fill(null);
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startQuiz() {
+  currentQ = 0;
+  answers = new Array(30).fill(null);
+  renderQuestion();
+  showPage('quiz');
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  const ti = TYPE_INFO[q.type];
+  document.getElementById('q-current').textContent = currentQ + 1;
+  document.getElementById('q-num-display').textContent = String(currentQ + 1).padStart(2,'0');
+  document.getElementById('question-text').textContent = q.text;
+  document.getElementById('progress-fill').style.width = ((currentQ + 1) / 30 * 100) + '%';
+  document.getElementById('btn-prev').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+  document.getElementById('unanswered-msg').style.display = 'none';
+
+  const btn = document.getElementById('btn-next');
+  btn.textContent = currentQ === 29 ? 'Voir mes résultats' : 'Suivant';
+  if (currentQ < 29) btn.innerHTML += ' <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  OPTIONS.forEach(opt => {
+    const lbl = document.createElement('label');
+    lbl.className = 'option-label' + (answers[currentQ] === opt.value ? ' selected' : '');
+    lbl.innerHTML = `<span class="radio-dot"></span><input type="radio" name="q${currentQ}" value="${opt.value}">${opt.label}`;
+    lbl.querySelector('input').addEventListener('change', () => {
+      document.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+      lbl.classList.add('selected');
+      answers[currentQ] = opt.value;
+      document.getElementById('unanswered-msg').style.display = 'none';
+    });
+    grid.appendChild(lbl);
+  });
+}
+
+function nextQuestion() {
+  if (answers[currentQ] === null) {
+    document.getElementById('unanswered-msg').style.display = 'block';
+    return;
+  }
+  if (currentQ < 29) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) { currentQ--; renderQuestion(); }
+}
+
+function computeScores() {
+  const scores = { R:0, I:0, A:0, S:0, E:0, C:0 };
+  QUESTIONS.forEach((q, i) => { if (answers[i] !== null) scores[q.type] += answers[i]; });
+  return scores;
+}
+
+function showResults() {
+  const scores = computeScores();
+  const maxScore = 15;
+  const sorted = Object.entries(scores).sort((a,b) => b[1]-a[1]);
+
+  // Score cards
+  const grid = document.getElementById('scores-grid');
+  grid.innerHTML = '';
+  sorted.forEach(([type, score], idx) => {
+    const ti = TYPE_INFO[type];
+    const pct = Math.round(score / maxScore * 100);
+    const card = document.createElement('div');
+    card.className = 'score-card' + (idx < 3 ? ' top-score' : '');
+    card.innerHTML = `
+      <span class="score-letter" style="color:${ti.color}">${type}</span>
+      <span class="score-name">${ti.name}</span>
+      <div class="score-bar-wrap"><div class="score-bar" style="background:${ti.color};width:${pct}%"></div></div>
+      <span class="score-pct" style="color:${ti.color}">${pct}%</span>`;
+    grid.appendChild(card);
+  });
+
+  // Code RIASEC
+  const top3 = sorted.slice(0,3).map(([t])=>t);
+  const codeEl = document.getElementById('riasec-code');
+  codeEl.innerHTML = top3.map((t,i) => i===0?`<span>${t}</span>`:t).join('');
+
+  const codeDescEl = document.getElementById('code-desc');
+  const top3Names = top3.map(t => TYPE_INFO[t].name);
+  codeDescEl.textContent = `Votre profil dominant combine les dimensions ${top3Names.join(', ')}. Faites défiler pour découvrir votre portrait détaillé et les métiers qui correspondent à vos motivations profondes.`;
+
+  showPage('results');
+  renderProfile(top3);
+  generateReport(scores, sorted, top3);
+}
+
+
+const PROFIL_DATA = {
+  R: {
+    portrait: "Vous êtes une personne de terrain, concrète et pragmatique. Vous faites confiance à vos mains et à votre sens pratique plus qu'aux théories. Vous avez besoin de voir les résultats de votre travail, de toucher ce que vous construisez ou réparez. Le travail physique ne vous fait pas peur — au contraire, il vous donne de l'énergie.",
+    motivations: [
+      "Voir un résultat concret et tangible de votre travail",
+      "Utiliser vos mains, vos outils, votre corps",
+      "Résoudre des problèmes pratiques du quotidien",
+      "Travailler en extérieur ou sur le terrain",
+      "Avoir une vraie autonomie dans vos tâches"
+    ],
+    valeurs: [
+      "La compétence technique et le savoir-faire",
+      "L'honnêteté et le travail bien fait",
+      "L'indépendance et la liberté d'action",
+      "La solidité et la fiabilité",
+      "Le respect du travail manuel"
+    ],
+    besoins: [
+      "Un environnement physique, pas derrière un bureau toute la journée",
+      "Des tâches concrètes avec des résultats visibles",
+      "Un minimum de réunions et de paperasse",
+      "Une certaine liberté de mouvement et d'organisation",
+      "Être reconnu pour votre expertise et votre efficacité"
+    ],
+    atouts: ["Fiabilité", "Sens pratique", "Autonomie", "Dextérité", "Efficacité terrain", "Débrouillardise"],
+    eviter: "Les environnements trop abstraits, les postes 100% administratifs ou les métiers qui demandent beaucoup d'échanges verbaux sans action concrète. Vous avez besoin d'agir, pas seulement de planifier ou d'analyser."
+  },
+  I: {
+    portrait: "Vous êtes une personne curieuse, analytique, qui aime comprendre comment les choses fonctionnent. Vous observez, questionnez, cherchez des explications. Les problèmes complexes vous stimulent plutôt qu'ils ne vous découragent. Vous préférez réfléchir avant d'agir et aimez travailler à votre rythme, souvent de façon indépendante.",
+    motivations: [
+      "Comprendre les mécanismes derrière les choses",
+      "Résoudre des problèmes qui demandent de la réflexion",
+      "Apprendre en continu et approfondir vos connaissances",
+      "Analyser des données, des situations, des systèmes",
+      "Trouver par vous-même des réponses ou des solutions"
+    ],
+    valeurs: [
+      "La vérité, la précision et la rigueur",
+      "L'intelligence et la curiosité intellectuelle",
+      "L'indépendance de pensée",
+      "La compétence et l'expertise",
+      "L'honnêteté intellectuelle"
+    ],
+    besoins: [
+      "Du temps pour réfléchir, analyser et comprendre",
+      "Des missions qui font appel à votre esprit logique",
+      "Un environnement calme, avec peu d'interruptions",
+      "Être reconnu pour votre expertise et vos connaissances",
+      "Avoir accès à des ressources, des outils, des informations"
+    ],
+    atouts: ["Analyse", "Curiosité", "Rigueur", "Autonomie", "Résolution de problèmes", "Précision"],
+    eviter: "Les postes très répétitifs sans réflexion, les environnements trop bruyants ou instables, les rôles qui demandent beaucoup de vente ou de performance sociale sans fond technique. Vous avez besoin de profondeur, pas seulement d'exécution."
+  },
+  A: {
+    portrait: "Vous êtes une personne créative, sensible, avec un regard particulier sur le monde. Vous ressentez le besoin de vous exprimer, de créer, d'apporter une touche personnelle à ce que vous faites. Vous êtes souvent guidé(e) par votre intuition et votre sens esthétique. Les environnements rigides et répétitifs vous étouffent.",
+    motivations: [
+      "Créer quelque chose d'unique qui vous ressemble",
+      "Exprimer vos idées, vos émotions, votre personnalité",
+      "Avoir de la liberté dans la façon de travailler",
+      "Être dans un environnement stimulant et varié",
+      "Être reconnu(e) pour votre sensibilité et votre originalité"
+    ],
+    valeurs: [
+      "La liberté d'expression et de création",
+      "L'authenticité et l'originalité",
+      "La beauté, l'esthétique, l'harmonie",
+      "L'émotion et la sensibilité",
+      "L'indépendance et l'autonomie créative"
+    ],
+    besoins: [
+      "Un cadre de travail flexible, sans routine trop stricte",
+      "La possibilité d'apporter votre touche personnelle",
+      "Un environnement stimulant visuellement ou artistiquement",
+      "Être valorisé(e) pour votre créativité et vos idées",
+      "Des projets variés, pas toujours les mêmes tâches"
+    ],
+    atouts: ["Créativité", "Sensibilité", "Originalité", "Adaptabilité", "Sens esthétique", "Intuition"],
+    eviter: "Les environnements très contraints par des règles, les tâches répétitives sans liberté, les postes purement administratifs ou comptables. Vous avez besoin de créer, pas seulement d'appliquer des consignes."
+  },
+  S: {
+    portrait: "Vous êtes une personne profondément orientée vers les autres. Vous trouvez votre énergie dans le contact humain, l'aide, l'accompagnement. Vous êtes naturellement à l'écoute et les gens se confient facilement à vous. Travailler seul(e) ou sans interactions humaines régulières vous pèse rapidement.",
+    motivations: [
+      "Être utile et faire une vraie différence dans la vie des autres",
+      "Créer du lien, accompagner, soutenir",
+      "Travailler en équipe dans une ambiance bienveillante",
+      "Voir les progrès des personnes que vous aidez",
+      "Sentir que votre travail a du sens et un impact réel"
+    ],
+    valeurs: [
+      "La solidarité et l'entraide",
+      "Le respect et la dignité de chaque personne",
+      "L'égalité et la justice sociale",
+      "La chaleur humaine et l'empathie",
+      "Le service aux autres avant tout"
+    ],
+    besoins: [
+      "Un travail au contact des gens, pas isolé(e)",
+      "Une ambiance d'équipe bienveillante et collaborative",
+      "Sentir que votre travail est utile et reconnu",
+      "Des relations humaines riches et authentiques",
+      "Un environnement éthique qui partage vos valeurs"
+    ],
+    atouts: ["Écoute", "Empathie", "Patience", "Bienveillance", "Communication", "Sens du collectif"],
+    eviter: "Les postes très isolés, compétitifs ou orientés uniquement vers la performance chiffrée. Les environnements froids ou indifférents vous démotivent rapidement. Vous avez besoin de sens et de lien humain pour vous épanouir."
+  },
+  E: {
+    portrait: "Vous êtes une personne dynamique, ambitieuse, qui aime prendre des initiatives et entraîner les autres. Vous êtes à l'aise dans la prise de décision, la négociation et la prise de parole. Vous aimez les challenges, les objectifs à atteindre et vous êtes motivé(e) par la réussite et la reconnaissance.",
+    motivations: [
+      "Atteindre des objectifs et être récompensé(e) pour vos résultats",
+      "Convaincre, influencer, mener les gens vers un but commun",
+      "Prendre des initiatives et avoir des responsabilités",
+      "Évoluer et progresser rapidement dans votre carrière",
+      "Être reconnu(e) pour votre leadership et vos succès"
+    ],
+    valeurs: [
+      "L'ambition et la réussite",
+      "Le leadership et l'influence",
+      "La compétition positive et le dépassement de soi",
+      "La liberté d'entreprendre",
+      "L'efficacité et les résultats concrets"
+    ],
+    besoins: [
+      "Des objectifs clairs et des défis stimulants",
+      "Une certaine liberté dans vos méthodes de travail",
+      "Être reconnu(e) et valorisé(e) pour vos résultats",
+      "Des responsabilités qui grandissent avec le temps",
+      "Un environnement dynamique, pas routinier"
+    ],
+    atouts: ["Leadership", "Persuasion", "Initiative", "Dynamisme", "Ambition", "Sens des affaires"],
+    eviter: "Les postes trop routiniers, sans objectifs ni évolution, ou les environnements très hiérarchiques où vous n'avez aucune marge de manœuvre. Vous avez besoin d'agir, de décider et d'avancer."
+  },
+  C: {
+    portrait: "Vous êtes une personne organisée, méthodique et fiable. Vous aimez les cadres clairs, les procédures bien définies et les tâches structurées. Vous êtes attentif(ve) aux détails et vous faites peu d'erreurs. Vous avez besoin de savoir exactement ce qu'on attend de vous pour donner le meilleur de vous-même.",
+    motivations: [
+      "Accomplir vos tâches avec précision et exactitude",
+      "Suivre des règles et des procédures claires",
+      "Avoir un environnement stable et prévisible",
+      "Être reconnu(e) pour votre fiabilité et votre rigueur",
+      "Contribuer au bon fonctionnement d'une organisation"
+    ],
+    valeurs: [
+      "L'ordre, la rigueur et la méthode",
+      "La fiabilité et le sens des responsabilités",
+      "La stabilité et la sécurité",
+      "Le respect des règles et des engagements",
+      "La loyauté envers son employeur"
+    ],
+    besoins: [
+      "Des tâches bien définies avec des attentes claires",
+      "Un environnement stable, sans trop d'imprévus",
+      "Des outils et des procédures fiables",
+      "Être reconnu(e) pour votre sérieux et votre précision",
+      "Une organisation bien structurée avec une hiérarchie claire"
+    ],
+    atouts: ["Organisation", "Rigueur", "Fiabilité", "Précision", "Méthode", "Sens du détail"],
+    eviter: "Les environnements chaotiques, ambigus ou sans règles claires. Les postes très créatifs ou peu structurés vous mettent mal à l'aise. Vous avez besoin de cadre et de clarté pour être efficace et serein(e)."
+  }
+};
+
+function renderProfile(top3) {
+  const t1 = top3[0], t2 = top3[1], t3 = top3[2];
+  const d = PROFIL_DATA[t1];
+  const c1 = TYPE_INFO[t1].color;
+  const c2 = TYPE_INFO[t2].color;
+  const c3 = TYPE_INFO[t3].color;
+
+  const motItems = d.motivations.map(m => `<div class="portrait-item"><span class="portrait-dot" style="background:${c1}"></span><span>${m}</span></div>`).join('');
+  const valItems = d.valeurs.map(v => `<div class="portrait-item"><span class="portrait-dot" style="background:${c2}"></span><span>${v}</span></div>`).join('');
+  const besItems = d.besoins.map(b => `<div class="portrait-item"><span class="portrait-dot" style="background:${c3}"></span><span>${b}</span></div>`).join('');
+  const chips = d.atouts.map(a => `<span class="strength-chip">${a}</span>`).join('');
+
+  const svgMotiv = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="${c1}" stroke-width="1.8"><path d="M8 2l1.5 3.5 3.5.5-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const svgVal = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="${c2}" stroke-width="1.8"><path d="M8 13s-5-3-5-7a5 5 0 0 1 10 0c0 4-5 7-5 7z" stroke-linecap="round"/></svg>`;
+  const svgBes = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="${c3}" stroke-width="1.8"><circle cx="8" cy="8" r="5.5"/><path d="M8 5.5v3l1.5 1.5" stroke-linecap="round"/></svg>`;
+
+  document.getElementById('profile-section').innerHTML = `
+    <div class="portrait-section">
+      <div class="portrait-intro-card">
+        <p>${d.portrait}</p>
+      </div>
+      <div class="portrait-grid">
+        <div class="portrait-card">
+          <div class="portrait-card-head">
+            <div class="portrait-icon" style="background:${c1}22">${svgMotiv}</div>
+            <h4 style="color:${c1}">Ce qui vous motive</h4>
+          </div>
+          <div class="portrait-card-body">${motItems}</div>
+        </div>
+        <div class="portrait-card">
+          <div class="portrait-card-head">
+            <div class="portrait-icon" style="background:${c2}22">${svgVal}</div>
+            <h4 style="color:${c2}">Vos valeurs clés</h4>
+          </div>
+          <div class="portrait-card-body">${valItems}</div>
+        </div>
+        <div class="portrait-card">
+          <div class="portrait-card-head">
+            <div class="portrait-icon" style="background:${c3}22">${svgBes}</div>
+            <h4 style="color:${c3}">Pour vous épanouir</h4>
+          </div>
+          <div class="portrait-card-body">${besItems}</div>
+        </div>
+      </div>
+      <div class="portrait-bottom-row">
+        <div class="portrait-strengths-card">
+          <div class="portrait-strengths-label">Vos points forts naturels</div>
+          <div class="strengths-chips">${chips}</div>
+        </div>
+        <div class="portrait-avoid-card">
+          <div class="portrait-avoid-label">Environnements à éviter</div>
+          <p>${d.eviter}</p>
+        </div>
+      </div>
+    </div>`;
+}
+
+const METIERS_DB = {
+  R: [
+    { titre:"Électricien(ne) du bâtiment", lien_riasec:"Ce métier est fait pour les personnes qui aiment travailler de leurs mains dans des environnements concrets. Vous intervenez sur des chantiers ou chez des particuliers pour installer et entretenir des installations électriques, avec des résultats visibles et immédiats.", competences:["Lecture de plans","Sécurité électrique","Rigueur technique"], perspective:"Forte", contexte_emploi:"Métier très en tension : les entreprises du bâtiment peinent à recruter. CDI fréquents, possibilité d'intérim bien rémunéré partout en France.", formation:"CAP Électricien" },
+    { titre:"Plombier / Chauffagiste", lien_riasec:"Vous aimez résoudre des problèmes pratiques avec les mains ? Ce métier vous mettra en contact direct avec des résultats tangibles : une fuite réparée, un chauffe-eau installé, chez des particuliers, en entreprise ou pour des bailleurs sociaux.", competences:["Dextérité manuelle","Diagnostic de panne","Autonomie"], perspective:"Forte", contexte_emploi:"Fort manque de plombiers qualifiés en France. Salaires en hausse, nombreuses offres en CDI et en intérim partout sur le territoire.", formation:"CAP Installateur Sanitaire" },
+    { titre:"Agent d'entretien des espaces verts", lien_riasec:"Ce poste convient parfaitement aux personnes qui aiment travailler dehors, au contact de la nature et dans un cadre physique. Vous entretenez parcs, jardins, espaces publics ou propriétés privées au fil des saisons.", competences:["Conduite d'engins","Taille et plantation","Travail en extérieur"], perspective:"Forte", contexte_emploi:"Nombreux postes dans les collectivités territoriales, les mairies et les entreprises de paysagisme. Recrutements réguliers.", formation:"CAP Agricole / CAPA" },
+    { titre:"Mécanicien(ne) automobile", lien_riasec:"Idéal si vous aimez comprendre comment les machines fonctionnent et les réparer. Vous diagnostiquez des pannes, effectuez des révisions et remettez en état les véhicules dans un garage ou une concession.", competences:["Diagnostic mécanique","Outillage","Méthode"], perspective:"Forte", contexte_emploi:"Secteur en recrutement constant. Garages, concessions et réseaux indépendants cherchent activement des profils, y compris sur l'électrique.", formation:"CAP Maintenance Auto" },
+    { titre:"Cariste / Magasinier(ère)", lien_riasec:"Ce poste convient aux personnes organisées qui aiment bouger et travailler dans un cadre physique et concret. Vous réceptionnez, stockez et expédiez des marchandises dans un entrepôt ou une plateforme logistique.", competences:["Conduite de chariot","Gestion de stocks","Rigueur"], perspective:"Forte", contexte_emploi:"Secteur logistique en forte croissance avec l'e-commerce. Nombreux postes en CDD, CDI et intérim dans toute la France.", formation:"CACES + Formation interne" },
+    { titre:"Peintre en bâtiment", lien_riasec:"Vous aimez les travaux manuels et voir le résultat concret de votre travail ? La peinture en bâtiment allie précision, sens de l'esthétique et activité physique, en intérieur comme en extérieur.", competences:["Préparation des supports","Application peinture","Soin du détail"], perspective:"Moyenne", contexte_emploi:"Demande régulière dans les entreprises de second œuvre et la rénovation. Plusieurs artisans et PME recrutent en continu.", formation:"CAP Peintre Applicateur" },
+    { titre:"Conducteur(trice) de bus / car", lien_riasec:"Ce métier est fait pour les personnes qui apprécient un travail cadré, responsable et en contact avec le public. Vous assurez le transport de passagers en toute sécurité sur des lignes régulières ou des circuits scolaires.", competences:["Conduite en sécurité","Service aux usagers","Ponctualité"], perspective:"Forte", contexte_emploi:"Fort besoin de recrutement dans les réseaux publics et privés partout en France. Emplois stables, souvent en CDI avec avantages sociaux.", formation:"Permis D + FIMO Voyageurs" },
+    { titre:"Maçon(ne)", lien_riasec:"Vous aimez construire de vos mains et voir un ouvrage prendre forme ? La maçonnerie est un métier de terrain qui associe effort physique, précision et travail d'équipe sur chantier.", competences:["Lecture de plans","Coffrage et béton","Travail en équipe"], perspective:"Forte", contexte_emploi:"Secteur du bâtiment en tension permanente, notamment pour la rénovation énergétique. PME et grands groupes du BTP cherchent à recruter.", formation:"CAP Maçonnerie" },
+    { titre:"Technicien(ne) de maintenance industrielle", lien_riasec:"Vous aimez diagnostiquer et réparer ? Ce métier vous permettra d'intervenir sur des machines et équipements industriels pour les maintenir en état de fonctionnement, avec une réelle expertise technique valorisée.", competences:["Diagnostic panne","Mécanique et électricité","Réactivité"], perspective:"Forte", contexte_emploi:"Très recherché dans l'industrie, l'agroalimentaire et la logistique. CDI fréquents avec bonnes perspectives salariales.", formation:"Bac Pro MEI ou BTS MI" },
+    { titre:"Agent de propreté / Nettoyage", lien_riasec:"Ce métier accessible valorise le soin apporté à l'environnement de travail des autres. Vous intervenez dans des locaux professionnels, des établissements de santé ou des résidences.", competences:["Techniques de nettoyage","Discrétion","Organisation"], perspective:"Forte", contexte_emploi:"Un des secteurs qui recrute le plus en France. Postes en entreprises de propreté, hôtellerie et santé. Accès rapide à l'emploi.", formation:"Sans diplôme exigé / CQP" },
+    { titre:"Menuisier(ère)", lien_riasec:"Travailler le bois, fabriquer ou poser des menuiseries intérieures et extérieures : ce métier artisanal combine précision, créativité et habileté manuelle pour des résultats durables.", competences:["Travail du bois","Pose et assemblage","Précision"], perspective:"Moyenne", contexte_emploi:"Artisanat en recherche de profils pour la rénovation. Ateliers de fabrication et entreprises du bâtiment recrutent régulièrement.", formation:"CAP Menuiserie" },
+    { titre:"Chauffeur-livreur / Livreur(se)", lien_riasec:"Vous aimez l'autonomie, bouger et avoir des missions concrètes à accomplir chaque jour ? Ce métier vous mettra sur la route pour livrer des colis ou des marchandises à des particuliers ou des professionnels.", competences:["Conduite sécurisée","Tournées optimisées","Contact client"], perspective:"Forte", contexte_emploi:"Forte demande liée à l'e-commerce. Nombreux postes en CDI, CDD et auto-entrepreneuriat dans toutes les régions.", formation:"Permis B / Permis C selon véhicule" }
+  ],
+  I: [
+    { titre:"Technicien(ne) support informatique", lien_riasec:"Vous aimez comprendre comment les systèmes fonctionnent et résoudre des problèmes logiques ? Ce métier consiste à aider des utilisateurs à régler leurs pannes informatiques et à maintenir les équipements.", competences:["Diagnostic technique","Pédagogie","Réseaux et systèmes"], perspective:"Forte", contexte_emploi:"Secteur numérique en recrutement constant. Nombreux postes en entreprises, ESN et collectivités. Évolution rapide possible.", formation:"Bac Pro SN ou BTS SIO" },
+    { titre:"Préparateur(trice) en pharmacie", lien_riasec:"Ce métier associe rigueur scientifique, attention aux détails et contact avec le public. Vous préparez et délivrez des médicaments sous la responsabilité d'un pharmacien, en officine ou en établissement de santé.", competences:["Connaissance médicaments","Rigueur","Relation client"], perspective:"Forte", contexte_emploi:"Officines et pharmacies hospitalières recrutent régulièrement. Emploi stable, en CDI le plus souvent.", formation:"Brevet Professionnel Préparateur" },
+    { titre:"Contrôleur(se) qualité", lien_riasec:"Vous aimez vérifier, analyser et vous assurer que tout est conforme aux normes ? Ce poste consiste à contrôler la conformité des produits ou procédés dans une usine, un laboratoire ou une plateforme logistique.", competences:["Lecture de normes","Méthode","Attention aux détails"], perspective:"Moyenne", contexte_emploi:"Présent dans l'industrie, l'agroalimentaire et la pharmacie. Postes stables, souvent en CDI dans des PME et grands groupes.", formation:"Bac Pro ou BTS Qualité" },
+    { titre:"Technicien(ne) de laboratoire", lien_riasec:"Ce métier est idéal si vous aimez observer, mesurer et comprendre des phénomènes. Vous réalisez des analyses biologiques, chimiques ou industrielles selon des protocoles rigoureux.", competences:["Protocoles d'analyse","Manipulation d'équipements","Précision"], perspective:"Moyenne", contexte_emploi:"Laboratoires médicaux, industrie et environnement recrutent. Stabilité de l'emploi, souvent en CDI.", formation:"BTS Analyses de biologie médicale" },
+    { titre:"Opérateur(trice) en informatique industrielle", lien_riasec:"Vous êtes à l'aise avec la technique et l'observation ? Ce poste consiste à surveiller, paramétrer et maintenir des systèmes automatisés dans un environnement industriel.", competences:["Programmation de base","Vigilance","Résolution de problèmes"], perspective:"Forte", contexte_emploi:"L'industrie 4.0 génère de nombreux besoins. Recrutements en usines, sites de production et PME industrielles.", formation:"Bac Pro MSPC ou BTS" },
+    { titre:"Agent de stérilisation hospitalière", lien_riasec:"Vous aimez les procédures rigoureuses et les environnements ordonnés ? Ce poste consiste à décontaminer et stériliser le matériel médical selon des protocoles précis en établissement de santé.", competences:["Protocoles d'hygiène","Traçabilité","Rigueur"], perspective:"Forte", contexte_emploi:"Hôpitaux et cliniques recrutent régulièrement. Emploi stable et accessible rapidement via formation interne.", formation:"Formation courte / Titre Pro" },
+    { titre:"Technicien(ne) géomètre-topographe", lien_riasec:"Ce métier combine terrain, mesures précises et analyse. Vous intervenez sur des relevés de terrain pour des projets de construction, d'aménagement ou de bornage de propriété.", competences:["Relevés de terrain","Outils de mesure","Rigueur"], perspective:"Moyenne", contexte_emploi:"Cabinets de géomètres et bureaux d'études recrutent. Métier stable avec des perspectives d'évolution.", formation:"BTS Géomètre-Topographe" },
+    { titre:"Aide-soignant(e)", lien_riasec:"Vous avez le sens de l'observation et aimez comprendre les situations pour agir de façon adaptée ? Ce métier vous permettra d'accompagner des patients dans les actes essentiels de la vie tout en transmettant des informations à l'équipe soignante.", competences:["Observation clinique","Soins de base","Écoute"], perspective:"Forte", contexte_emploi:"Un des métiers les plus en tension en France. Hôpitaux, EHPAD et HAD recrutent massivement partout en France.", formation:"DEAS (Diplôme d'État Aide-Soignant)" },
+    { titre:"Agent de contrôle non-destructif (CND)", lien_riasec:"Ce métier technique consiste à inspecter des pièces ou structures à l'aide d'équipements spécialisés, sans les endommager, pour garantir leur conformité et la sécurité des installations.", competences:["Appareils de mesure","Analyse visuelle","Normes de sécurité"], perspective:"Forte", contexte_emploi:"Industrie aéronautique, nucléaire, pétrochimie : secteurs en tension avec de bons salaires. Certifications reconnues.", formation:"Certification COFREND / Formation spécialisée" },
+    { titre:"Technicien(ne) en électronique", lien_riasec:"Ce métier est fait pour les personnes qui aiment comprendre et réparer des systèmes complexes. Vous intervenez sur des équipements électroniques pour les diagnostiquer et les remettre en état.", competences:["Électronique","Diagnostic","Schémas techniques"], perspective:"Moyenne", contexte_emploi:"PME de maintenance, SAV et industries diverses. Compétences recherchées, postes souvent stables en CDI.", formation:"Bac Pro Systèmes Électroniques" },
+    { titre:"Opérateur(trice) de saisie / traitement de données", lien_riasec:"Vous aimez les tâches méthodiques nécessitant de la concentration et de la précision ? Ce poste consiste à saisir, vérifier et traiter des données pour des entreprises ou administrations.", competences:["Saisie rapide","Exactitude","Traitement de l'information"], perspective:"Moyenne", contexte_emploi:"Postes disponibles dans les administrations, mutuelles et PME. Demande stable dans les secteurs à fort volume documentaire.", formation:"Sans diplôme exigé / Formation bureautique" },
+    { titre:"Assistant(e) vétérinaire", lien_riasec:"Vous aimez les animaux et les environnements méthodiques ? Ce poste vous permet d'assister un vétérinaire dans les soins, la stérilisation du matériel et l'accueil des propriétaires en clinique vétérinaire.", competences:["Soins aux animaux","Hygiène","Organisation"], perspective:"Moyenne", contexte_emploi:"Cliniques vétérinaires en croissance, notamment en zones péri-urbaines. Recrutements réguliers, souvent en CDI.", formation:"Formation interne / CQP" }
+  ],
+  A: [
+    { titre:"Coiffeur(se)", lien_riasec:"Ce métier allie créativité, contact humain et habileté manuelle. Vous imaginez et réalisez des coupes, colorations et coiffures qui valorisent vos clients, dans un salon ou en indépendant.", competences:["Créativité","Dextérité","Relation client"], perspective:"Forte", contexte_emploi:"Fort besoin de recrutement dans les salons indépendants et les chaînes. Métier accessible rapidement avec de nombreux postes partout en France.", formation:"CAP Coiffure" },
+    { titre:"Esthéticien(ne) / Prothésiste ongulaire", lien_riasec:"Vous aimez le soin, le détail et mettre les gens en valeur ? Ce métier vous permet d'exercer un art du corps au quotidien, en institut ou en auto-entrepreneur, avec une clientèle fidèle.", competences:["Soins visage et corps","Sens esthétique","Précision"], perspective:"Moyenne", contexte_emploi:"Instituts, spas et auto-entrepreneuriat. Bonne demande surtout en péri-urbain. Développement des soins bien-être.", formation:"CAP Esthétique-Cosmétique" },
+    { titre:"Animateur(trice) socioculturel(le)", lien_riasec:"Votre créativité et votre sens du lien social font de vous un animateur naturel. Vous concevez et animez des activités pour des publics variés en centre social, MJC, mairie ou association.", competences:["Créativité","Animation de groupe","Adaptabilité"], perspective:"Moyenne", contexte_emploi:"Nombreux postes dans les associations, centres sociaux et mairies. CDD fréquents mais réel vivier d'emploi.", formation:"BPJEPS Animation" },
+    { titre:"Fleuriste", lien_riasec:"Vous avez un sens artistique développé et aimez travailler avec le vivant ? La fleuristerie associe création de compositions, connaissance des végétaux et accueil de la clientèle.", competences:["Composition florale","Connaissance des plantes","Créativité"], perspective:"Moyenne", contexte_emploi:"Fleuristes indépendants et jardineries. Emploi accessible, possibilité d'installation à son compte. Demande régulière pour les événements.", formation:"CAP Fleuriste" },
+    { titre:"Boulanger(ère) / Pâtissier(ère)", lien_riasec:"La boulangerie-pâtisserie associe technique et créativité : façonner des produits, inventer des recettes, soigner la présentation. Vous travaillez dans un cadre artisanal valorisant.", competences:["Fabrication artisanale","Créativité","Organisation"], perspective:"Forte", contexte_emploi:"Boulangers et pâtisseries artisanales peinent à recruter partout en France. Bonne sécurité de l'emploi, nombreux postes.", formation:"CAP Boulanger / CAP Pâtissier" },
+    { titre:"Photographe événementiel(le)", lien_riasec:"Vous avez le regard artistique et aimez capter des émotions ? La photographie événementielle (mariages, portraits, entreprises) vous permet d'exercer une activité créative avec une réelle demande locale.", competences:["Maîtrise appareil photo","Retouche","Sens artistique"], perspective:"En développement", contexte_emploi:"Marché concurrentiel mais demande constante pour mariages et événements professionnels. Statut auto-entrepreneur courant.", formation:"Formation courte / Autodidacte" },
+    { titre:"Couturier(ère) / Retoucheur(se)", lien_riasec:"Si vous aimez créer ou transformer des vêtements avec précision et sens du détail, ce métier artisanal vous permet d'exercer une activité manuelle et créative très concrète.", competences:["Couture machine et main","Patronnage","Précision"], perspective:"En développement", contexte_emploi:"Niche stable avec peu de concurrence locale. Ateliers de retouche et artisanat de la mode. Clientèle fidèle possible.", formation:"CAP Métiers de la mode" },
+    { titre:"Animateur(trice) périscolaire / ALSH", lien_riasec:"Vous aimez inventer des activités, faire rire, apprendre en jouant ? Ce métier d'animation auprès des enfants combine créativité, énergie et sens du collectif.", competences:["Animation enfants","Créativité","Responsabilité"], perspective:"Forte", contexte_emploi:"Mairies, associations et centres de loisirs recrutent massivement pour les périscolaires et les vacances scolaires.", formation:"BAFA / CPJEPS" },
+    { titre:"Maquilleur(se) artistique", lien_riasec:"Ce métier créatif vous permet d'exercer un art du visage dans des contextes variés : théâtre, mariage, événementiel, photographie. Vous valorisez les personnes par votre sens artistique.", competences:["Techniques de maquillage","Créativité","Contact humain"], perspective:"En développement", contexte_emploi:"Activité souvent en auto-entrepreneur, complémentaire à l'esthétique. Demande régulière pour mariages et événements.", formation:"CAP Esthétique + Formation maquillage" },
+    { titre:"Assistant(e) communication visuelle", lien_riasec:"Vous aimez créer des visuels, des affiches, des publications pour les réseaux sociaux ? Ce poste en PME ou association vous permettra d'exprimer votre créativité graphique au quotidien.", competences:["Outils graphiques","Créativité","Sens du message"], perspective:"Moyenne", contexte_emploi:"Petites structures cherchent des personnes polyvalentes en communication. Souvent en alternance, association ou contrat aidé.", formation:"Bac Pro Communication / Titre Pro" },
+    { titre:"Tatoueur(se) / Perceur(se)", lien_riasec:"Vous avez un sens artistique fort et aimez l'artisanat du corps ? Ce métier en forte croissance permet d'exercer une activité indépendante avec une vraie dimension artistique et artisanale.", competences:["Dessin","Hygiène et sécurité","Relation client"], perspective:"En développement", contexte_emploi:"Secteur en forte croissance, ouverture de studios en hausse. Niche avec clientèle fidèle possible en zone urbaine.", formation:"Formation professionnelle spécialisée" },
+    { titre:"Décorateur(trice) d'intérieur (assistant)", lien_riasec:"Vous avez un sens aigu de l'espace et de l'harmonie des couleurs ? En tant qu'assistant décorateur, vous aidez à concevoir des ambiances intérieures pour des particuliers ou des professionnels.", competences:["Sens des volumes","Tendances déco","Relationnel"], perspective:"En développement", contexte_emploi:"Marché en croissance lié à la rénovation et au home staging. Souvent en indépendant ou associé à une agence immobilière.", formation:"Titre Pro / BTS Espace et Volume" }
+  ],
+  S: [
+    { titre:"Aide-soignant(e)", lien_riasec:"Votre sens de l'écoute et votre envie d'aider au quotidien correspondent parfaitement à ce métier. Vous accompagnez des patients ou des résidents dans les actes essentiels de la vie, au sein d'équipes soignantes bienveillantes.", competences:["Soins de nursing","Écoute","Patience"], perspective:"Forte", contexte_emploi:"Un des métiers les plus en tension en France. Hôpitaux, EHPAD et soins à domicile recrutent massivement partout en France.", formation:"DEAS (Diplôme d'État Aide-Soignant)" },
+    { titre:"Auxiliaire de vie sociale (AVS)", lien_riasec:"Vous aimez accompagner des personnes vulnérables dans leur quotidien et leur permettre de rester à domicile ? Ce métier associe relation humaine, adaptabilité et sens du service.", competences:["Accompagnement à domicile","Écoute","Gestion du quotidien"], perspective:"Forte", contexte_emploi:"Secteur en très forte croissance avec le vieillissement de la population. Postes partout en France, chez des particuliers et associations.", formation:"DEAES ou Titre Pro ADVF" },
+    { titre:"Auxiliaire de puériculture", lien_riasec:"Vous aimez les jeunes enfants et voulez contribuer à leur développement ? Ce métier vous permettra d'accompagner des bébés et enfants en bas âge dans des crèches, maternités ou haltes-garderies.", competences:["Soins aux nourrissons","Jeu et éveil","Travail en équipe"], perspective:"Forte", contexte_emploi:"Crèches publiques et privées, maternités cherchent à recruter partout en France. Emploi stable, souvent en CDI.", formation:"DEAP (Diplôme d'État Auxiliaire de Puériculture)" },
+    { titre:"Accompagnant éducatif et social (AES)", lien_riasec:"Vous voulez accompagner des personnes en situation de handicap ou de dépendance dans leur vie quotidienne et sociale ? Ce métier de terrain, humain et engagé, vous permettra de faire une vraie différence.", competences:["Accompagnement éducatif","Bienveillance","Adaptabilité"], perspective:"Forte", contexte_emploi:"Écoles, IME, ESAT et EHPAD : nombreux postes dans le médico-social. Recrutements réguliers par associations et établissements.", formation:"DEAES ou Titre Pro" },
+    { titre:"Agent d'accueil / Hôte(sse) d'accueil", lien_riasec:"Vous aimez accueillir, orienter, rassurer les gens ? Ce poste de première ligne vous permettra d'être l'interlocuteur(trice) clé d'une entreprise, d'une collectivité ou d'un établissement de santé.", competences:["Accueil physique et téléphonique","Information","Calme et sourire"], perspective:"Forte", contexte_emploi:"Nombreux postes dans les mairies, hôpitaux, grandes entreprises et agences. Accès rapide à l'emploi en CDI ou CDD.", formation:"Bac ou Titre Pro Accueil" },
+    { titre:"Animateur(trice) pour personnes âgées", lien_riasec:"Votre bienveillance et votre créativité au service des aînés : vous concevez et animez des activités adaptées pour les résidents d'EHPAD ou de foyers logement, favorisant le lien social.", competences:["Animation adaptée","Empathie","Organisation"], perspective:"Forte", contexte_emploi:"EHPAD et résidences seniors recrutent. Secteur en croissance avec le vieillissement de la population en France.", formation:"BPJEPS / Titre Pro Animateur" },
+    { titre:"Médiateur(trice) social(e)", lien_riasec:"Vous aimez faciliter les échanges, résoudre les conflits et créer du lien dans des quartiers ou des structures ? Ce métier de terrain associe empathie, communication et connaissance du tissu local.", competences:["Médiation et dialogue","Droits sociaux","Présence terrain"], perspective:"En développement", contexte_emploi:"Associations, bailleurs sociaux et mairies. Financement variable selon les territoires et appels à projets.", formation:"Titre Pro Médiateur social" },
+    { titre:"Assistant(e) maternel(le) agréé(e)", lien_riasec:"Vous adorez les enfants et souhaitez les accueillir chez vous dans un cadre familial chaleureux ? Ce métier autonome vous permet d'accompagner le développement de jeunes enfants à domicile.", competences:["Soins aux enfants","Organisation","Relation avec les parents"], perspective:"Forte", contexte_emploi:"Fort besoin partout en France. Agrément délivré par le conseil départemental. Revenus réguliers via le CESU.", formation:"Agrément + Formation CAP Petite Enfance" },
+    { titre:"Agent de service hospitalier (ASH)", lien_riasec:"Ce métier de proximité dans les établissements de santé vous permettra d'assurer la propreté des locaux et de participer au confort des patients, en lien avec l'équipe soignante.", competences:["Techniques de nettoyage","Discrétion","Esprit d'équipe"], perspective:"Forte", contexte_emploi:"Hôpitaux, cliniques et EHPAD recrutent en permanence. Postes accessibles rapidement, souvent en CDI.", formation:"Sans diplôme exigé / Formation interne" },
+    { titre:"Moniteur(trice) d'atelier (ESAT)", lien_riasec:"Dans un établissement de travail adapté, vous encadrez des travailleurs en situation de handicap dans des activités de production ou de service, avec bienveillance et pédagogie.", competences:["Encadrement adapté","Patience","Expertise métier"], perspective:"Moyenne", contexte_emploi:"Réseau des ESAT en France. Postes stables, souvent en CDI, dans des structures associatives ou publiques.", formation:"Titre Pro ou formation interne" },
+    { titre:"Intervenant(e) en activités physiques adaptées", lien_riasec:"Vous aimez le sport et accompagner des personnes vers le mieux-être ? Ce métier vous permettra de proposer des activités physiques adaptées à des publics fragiles (seniors, personnes handicapées).", competences:["Activités adaptées","Pédagogie","Bienveillance"], perspective:"En développement", contexte_emploi:"Associations, EHPAD et centres de rééducation. Secteur en émergence avec un besoin croissant de professionnels formés.", formation:"Licence STAPS APA" },
+    { titre:"Cuisinier(ère) en restauration collective", lien_riasec:"Vous aimez nourrir et prendre soin des autres ? La restauration collective (hôpitaux, écoles, EHPAD, entreprises) vous permet d'exercer un métier de service concret, en équipe, avec des horaires souvent réguliers.", competences:["Cuisine en grande quantité","Normes HACCP","Organisation"], perspective:"Forte", contexte_emploi:"Restauration scolaire, hospitalière et d'entreprise : nombreux postes disponibles partout en France, souvent en CDI.", formation:"CAP Cuisine" }
+  ],
+  E: [
+    { titre:"Commercial(e) terrain / VRP", lien_riasec:"Vous aimez convaincre, rencontrer des gens et relever des défis ? La vente terrain est faite pour vous. Vous prospectez et fidélisez une clientèle de professionnels ou de particuliers pour le compte d'une entreprise.", competences:["Prospection","Négociation","Persévérance"], perspective:"Forte", contexte_emploi:"Secteur commercial en recrutement permanent. Nombreuses offres dans l'assurance, les services aux entreprises et le BTP.", formation:"Bac Pro Commerce / BTS NRC" },
+    { titre:"Conseiller(ère) clientèle (banque / assurance)", lien_riasec:"Votre aisance relationnelle et votre sens de la persuasion sont des atouts majeurs. Vous accompagnez des clients dans leurs démarches et leur proposez des solutions adaptées à leurs besoins.", competences:["Écoute active","Argumentation","Connaissance produits"], perspective:"Forte", contexte_emploi:"Banques, mutuelles et assurances recrutent régulièrement. Formations souvent assurées en interne, CDI fréquents.", formation:"Bac +2 (BTS Assurance / Banque)" },
+    { titre:"Responsable de rayon (grande distribution)", lien_riasec:"Vous aimez organiser, animer une équipe et atteindre des objectifs commerciaux ? Vous gérez les stocks, l'implantation et les résultats de votre secteur dans une grande surface.", competences:["Gestion de rayon","Management","Sens commercial"], perspective:"Moyenne", contexte_emploi:"Grande distribution en recrutement régulier. Évolution interne possible. CDI après période de formation.", formation:"Bac Pro Commerce / formation interne" },
+    { titre:"Animateur(trice) commercial(e)", lien_riasec:"Vous aimez être sur le terrain, en contact avec le public et représenter une marque ? Ce poste consiste à animer des démonstrations en magasin, des stands en salon ou des opérations de promotion.", competences:["Aisance orale","Enthousiasme","Argumentation produit"], perspective:"Moyenne", contexte_emploi:"Nombreuses missions en CDD et intérim pour les fêtes, salons et lancements de produits. Agences événementielles et grandes marques.", formation:"Bac ou formation courte" },
+    { titre:"Chef d'équipe BTP", lien_riasec:"Vous aimez prendre les rênes d'un groupe et mener des projets à bien ? Ce poste terrain vous permettra d'encadrer une équipe de chantier et d'assurer la bonne réalisation des travaux dans les délais.", competences:["Encadrement terrain","Organisation","Communication"], perspective:"Forte", contexte_emploi:"Secteur BTP en tension. Les entreprises cherchent à promouvoir des profils expérimentés en interne. Bonne rémunération.", formation:"Bac Pro BTP + expérience terrain" },
+    { titre:"Agent(e) immobilier(ère)", lien_riasec:"Négocier, convaincre, accompagner des projets de vie : l'immobilier vous permet d'exercer un métier entrepreneurial avec une réelle liberté d'organisation et une rémunération liée à vos résultats.", competences:["Négociation","Réseau et prospection","Marché local"], perspective:"Moyenne", contexte_emploi:"Nombreuses agences et réseaux mandataires recrutent en permanence. Secteur cyclique mais avec une demande régulière.", formation:"BTS Professions immobilières ou Formation loi ALUR" },
+    { titre:"Vendeur(se) spécialisé(e)", lien_riasec:"Votre enthousiasme et votre sens du contact vous permettront d'accompagner des clients dans leurs achats avec expertise et conviction, dans un secteur qui vous passionne (sport, bricolage, jardin…).", competences:["Conseil client","Connaissance produits","Sens commercial"], perspective:"Moyenne", contexte_emploi:"Grandes enseignes spécialisées recrutent régulièrement. CDI après période d'essai, formation produit assurée.", formation:"Bac Pro Commerce / CQP Vendeur" },
+    { titre:"Gérant(e) d'un commerce de proximité", lien_riasec:"Vous rêvez de votre propre affaire ? Ouvrir une épicerie, une boulangerie ou une franchise vous permettra de combiner initiative, gestion et contact humain au quotidien.", competences:["Gestion commerciale","Management","Sens du client"], perspective:"En développement", contexte_emploi:"Reprise de fonds de commerce ou franchise : opportunités dans les zones semi-rurales. Nécessite un apport personnel.", formation:"Sans diplôme exigé / Formation franchise" },
+    { titre:"Auto-entrepreneur dans le service à la personne", lien_riasec:"Vous avez des compétences pratiques et aimez organiser votre propre activité ? Proposer des services (bricolage, jardinage, informatique) vous permet de travailler en toute autonomie localement.", competences:["Expertise technique","Sens du service","Autonomie"], perspective:"En développement", contexte_emploi:"Forte demande locale pour des services de proximité. Statut auto-entrepreneur accessible rapidement avec peu de démarches.", formation:"Sans diplôme exigé / Formation courte" },
+    { titre:"Formateur(trice) en centre de formation", lien_riasec:"Vous aimez transmettre, convaincre et animer ? Devenir formateur dans votre domaine d'expertise vous permettra d'exercer un rôle à la fois pédagogique et dynamique, auprès d'adultes en reconversion.", competences:["Animation de groupe","Expertise métier","Pédagogie"], perspective:"Moyenne", contexte_emploi:"Organismes de formation et CFA recrutent des formateurs experts dans leur domaine. Souvent en vacations ou CDD.", formation:"Titre Pro Formateur + expérience" },
+    { titre:"Responsable d'un food truck", lien_riasec:"Vous avez l'âme d'un entrepreneur et aimez créer quelque chose qui vous ressemble ? Le food truck est un modèle accessible pour lancer son activité de restauration avec un investissement limité.", competences:["Cuisine","Gestion","Sens commercial"], perspective:"En développement", contexte_emploi:"Secteur en essor dans les villes et événements. Nécessite un apport, mais statut auto-entrepreneur accessible.", formation:"CAP Cuisine + Formation gestion" },
+    { titre:"Chargé(e) de recrutement junior", lien_riasec:"Vous aimez rencontrer des gens, évaluer des profils et convaincre ? Le recrutement vous permettra d'exercer un métier commercial et humain, au sein d'une agence d'intérim ou d'un service RH.", competences:["Entretien","Argumentation","Organisation"], perspective:"Moyenne", contexte_emploi:"Agences d'intérim et cabinets de recrutement recrutent en continu, souvent en CDI avec primes sur résultats.", formation:"Bac +2 ou Titre Pro RH" }
+  ],
+  C: [
+    { titre:"Secrétaire médical(e)", lien_riasec:"Vous aimez les environnements organisés, les procédures claires et le travail de précision ? Ce poste vous permettra de gérer les dossiers patients, les rendez-vous et la facturation dans un cabinet médical ou une clinique.", competences:["Accueil et téléphone","Gestion de dossiers","Terminologie médicale"], perspective:"Forte", contexte_emploi:"Cabinets médicaux, hôpitaux et centres de santé : forte demande partout en France. CDI fréquents avec formation interne possible.", formation:"Titre Pro Secrétaire Médical(e)" },
+    { titre:"Agent administratif / Employé(e) de bureau", lien_riasec:"Vous aimez classer, organiser, rédiger et gérer des informations avec méthode ? Ce poste polyvalent assure le bon fonctionnement administratif d'une entreprise ou d'une collectivité.", competences:["Bureautique (Word, Excel)","Organisation","Rédaction"], perspective:"Forte", contexte_emploi:"Administrations, mairies, entreprises et associations : postes nombreux et accessibles rapidement en CDI ou CDD.", formation:"Bac Pro AGORA ou Titre Pro" },
+    { titre:"Gestionnaire de paie (assistant)", lien_riasec:"Vous aimez les chiffres et les règles précises ? Ce poste consiste à calculer et traiter les salaires des employés en respectant scrupuleusement la législation sociale.", competences:["Calcul des salaires","Logiciels de paie","Réglementation sociale"], perspective:"Moyenne", contexte_emploi:"Cabinets comptables, services RH d'entreprises et PME recrutent régulièrement. Compétence valorisée et bien rémunérée.", formation:"BTS Comptabilité / Titre Pro" },
+    { titre:"Caissier(ère) / Hôte(sse) de caisse", lien_riasec:"Vous appréciez les tâches structurées et vérifiables ? Ce poste vous permettra de gérer les encaissements avec exactitude tout en assurant un accueil agréable à la clientèle.", competences:["Manipulation des espèces","Rigueur","Contact client"], perspective:"Forte", contexte_emploi:"Grande distribution, commerces et stations-service : nombreux postes partout en France, accessibles immédiatement.", formation:"Sans diplôme exigé / Formation interne" },
+    { titre:"Magasinier(ère) / Gestionnaire de stocks", lien_riasec:"Vous aimez que tout soit à sa place et que les procédures soient respectées ? Ce poste consiste à réceptionner, stocker et expédier des marchandises selon des règles précises de traçabilité.", competences:["Gestion de stocks","Logiciels ERP","Rigueur"], perspective:"Forte", contexte_emploi:"Industrie, logistique et commerce de gros : nombreuses offres en CDI et intérim dans toute la France.", formation:"CACES + Bac Pro Logistique" },
+    { titre:"Comptable assistant(e)", lien_riasec:"Vous avez un esprit méthodique et aimez les chiffres ? Ce poste vous permettra de saisir et vérifier des écritures comptables, de préparer des déclarations et d'assurer le suivi des comptes.", competences:["Saisie comptable","Logiciels comptables","Exactitude"], perspective:"Moyenne", contexte_emploi:"Cabinets d'expertise comptable et PME recrutent régulièrement. Évolution interne possible vers comptable confirmé.", formation:"BTS Comptabilité / DCG" },
+    { titre:"Agent de gestion administrative (collectivité)", lien_riasec:"Vous appréciez les environnements réglementés et le service public ? Ce poste en mairie ou conseil départemental vous permettra de traiter des dossiers administratifs avec méthode, dans un cadre stable.", competences:["Réglementation administrative","Bureautique","Organisation"], perspective:"Moyenne", contexte_emploi:"Concours de catégorie C ou recrutement contractuel. Emploi très stable dans les collectivités territoriales.", formation:"Bac / Concours Fonction Publique" },
+    { titre:"Assistant(e) de gestion en PME", lien_riasec:"Vous aimez être le pilier organisationnel d'une structure ? Ce poste polyvalent associe comptabilité, gestion commerciale et administrative pour soutenir une petite entreprise.", competences:["Bureautique avancée","Comptabilité de base","Polyvalence"], perspective:"Moyenne", contexte_emploi:"PME et TPE de tous secteurs. Postes souvent en CDI, avec une polyvalence très appréciée par les dirigeants.", formation:"BTS Gestion de la PME" },
+    { titre:"Facteur(trice) / Agent de distribution", lien_riasec:"Vous aimez l'ordre, les tournées bien organisées et le contact humain régulier ? Ce métier de terrain associe rigueur dans la distribution du courrier et des colis, et sens du service auprès des usagers.", competences:["Organisation de tournée","Ponctualité","Contact client"], perspective:"Moyenne", contexte_emploi:"La Poste et acteurs de la livraison recrutent régulièrement. Nombreux postes en CDI et CDD dans toute la France.", formation:"Sans diplôme exigé / Permis B" },
+    { titre:"Employé(e) administratif(ve) en assurance / mutuelle", lien_riasec:"Vous aimez traiter des dossiers avec méthode et respecter des procédures bien définies ? Ce poste consiste à gérer des contrats, des sinistres ou des remboursements dans un cadre normé et stable.", competences:["Traitement de dossiers","Règles et procédures","Bureautique"], perspective:"Moyenne", contexte_emploi:"Mutuelles, compagnies d'assurance et courtiers recrutent régulièrement. CDI fréquents avec formation interne.", formation:"Bac Pro ou BTS Assurance" },
+    { titre:"Archiviste / Agent de records management", lien_riasec:"Vous aimez classer, ordonner et retrouver rapidement l'information ? Ce métier consiste à gérer, conserver et mettre à disposition des archives papier ou numériques dans une administration ou une entreprise.", competences:["Classification documentaire","Archivage numérique","Méthode"], perspective:"Moyenne", contexte_emploi:"Administrations, entreprises et hôpitaux. Demande croissante pour la gestion électronique des documents.", formation:"BTS GEA ou Titre Pro" },
+    { titre:"Opérateur(trice) de saisie / Agent centre d'appels entrants", lien_riasec:"Vous aimez traiter des informations de façon organisée et répondre à des demandes selon un cadre précis ? Ce poste vous permettra de gérer des données ou des appels dans un environnement structuré.", competences:["Saisie rapide","Écoute","Respect des procédures"], perspective:"Moyenne", contexte_emploi:"Centres d'appels, mutuelles et administrations. Nombreux postes en CDD et CDI, souvent accessibles sans diplôme.", formation:"Sans diplôme exigé / Formation interne" }
+  ]
+};
+
+const INTROS = {
+  R: "Votre profil ancré dans le concret et l'action est un vrai atout : les métiers manuels et techniques sont en forte tension partout en France.",
+  I: "Votre curiosité et votre goût pour l'analyse vous ouvrent la porte de métiers techniques accessibles et bien valorisés sur le marché de l'emploi.",
+  A: "Votre sensibilité créative est une vraie ressource : des métiers artisanaux, de l'animation et du soin vous permettront de l'exprimer chaque jour.",
+  S: "Votre sens du contact humain et votre envie d'être utile aux autres sont des qualités très recherchées dans les secteurs du soin, de l'accompagnement et de l'animation.",
+  E: "Votre dynamisme et votre sens de l'initiative correspondent à de nombreux métiers commerciaux et de terrain accessibles et bien rémunérés.",
+  C: "Votre rigueur et votre organisation sont des qualités très appréciées dans les métiers administratifs et de gestion, où l'emploi est stable et accessible."
+};
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function generateReport(scores, sorted, top3) {
+  document.getElementById('report-loading').style.display = 'block';
+  document.getElementById('report-content').style.display = 'none';
+
+  setTimeout(() => {
+    const [t1, t2, t3] = top3;
+    const pool1 = shuffle([...METIERS_DB[t1]]).slice(0, 4);
+    const pool2 = shuffle([...METIERS_DB[t2]]).slice(0, 3);
+    const pool3 = shuffle([...METIERS_DB[t3]]).slice(0, 3);
+    const metiers = [...pool1, ...pool2, ...pool3];
+    const intro = `${INTROS[t1]} Votre combinaison ${top3.join('')} vous oriente vers des métiers qui associent ${TYPE_INFO[t1].name.toLowerCase()}, ${TYPE_INFO[t2].name.toLowerCase()} et ${TYPE_INFO[t3].name.toLowerCase()} — voici dix pistes concrètes à explorer.`;
+    renderReport({ intro, metiers }, top3);
+  }, 900);
+}
+
+function renderReport(data, top3) {
+  document.getElementById('report-loading').style.display = 'none';
+  const content = document.getElementById('report-content');
+  content.style.display = 'block';
+
+  const empColor = { 'Forte': 'high', 'Moyenne': 'medium', 'En développement': 'low' };
+  const empLabel = { 'Forte': '🟢 Forte demande', 'Moyenne': '🟡 Demande moyenne', 'En développement': '🔵 En développement' };
+
+  let html = `
+    <div class="report-header-bar">
+      <h3>Rapport personnalisé — Code ${top3.join('')}</h3>
+      <p>10 pistes métiers adaptées à votre profil</p>
+    </div>
+    <div class="intro-text">${data.intro}</div>`;
+
+  data.metiers.forEach((m, i) => {
+    const cls = empColor[m.perspective] || 'medium';
+    html += `
+      <div class="metier-card">
+        <div class="metier-num">${i+1}</div>
+        <div class="metier-body">
+          <h4>${m.titre}</h4>
+          <div class="metier-tags">
+            <span class="metier-tag">${m.perspective === 'Forte' ? '✦' : m.perspective === 'Moyenne' ? '◆' : '◇'} ${m.perspective}</span>
+            <span class="metier-tag niveau">${m.formation}</span>
+            ${m.competences.slice(0,2).map(c=>`<span class="metier-tag emp">${c}</span>`).join('')}
+          </div>
+          <p class="metier-desc">${m.lien_riasec}</p>
+          <div class="emp-bar-row">
+            <span class="emp-label">Marché :</span>
+            <div class="emp-bar-wrap"><div class="emp-bar ${cls}"></div></div>
+            <span style="font-size:11px;color:var(--text-soft);white-space:nowrap;">${m.contexte_emploi.substring(0,60)}…</span>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  content.innerHTML = html;
+}
+
+function resetTest() {
+  currentQ = 0;
+  answers = new Array(30).fill(null);
+  showPage('welcome');
+}
+</script>
+</body>
+</html>
